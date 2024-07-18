@@ -12,34 +12,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_root_directory_type = $_POST['root_directory_type'];
     $storage_limit = $_POST['storage_limit'];
 
-    if ($new_root_directory_type == 'universal') {
-        $new_root_directory = '../users/';
-    } else {
-        $new_root_directory = '../users/' . $_POST['root_directory'];
-    }
-
     $sql = "SELECT username, root_directory FROM users WHERE id='$user_id'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $old_root_directory = '../users/' . $row['root_directory'];
 
-        // Rename directory only if the new root directory is not universal
-        if ($new_root_directory_type != 'universal' && !rename($old_root_directory, $new_root_directory)) {
-            echo "Error renaming directory.";
-            exit();
+        if ($new_root_directory_type == 'universal') {
+            $new_root_directory = '../users/';
+            $new_root_directory_db = 'universal_access';
+        } else {
+            if (!empty($_POST['root_directory'])) {
+                $new_root_directory = '../users/' . $_POST['root_directory'];
+                $new_root_directory_db = $_POST['root_directory'];
+
+                if (!rename($old_root_directory, $new_root_directory)) {
+                    echo "Error renaming directory.";
+                    exit();
+                }
+            } else {
+                $new_root_directory_db = $row['root_directory'];
+            }
         }
 
         // Update database
-        $new_root_directory_db = ($new_root_directory_type == 'universal') ? 'universal_access' : $_POST['root_directory'];
         $sql = "UPDATE users SET root_directory='$new_root_directory_db', storage_limit='$storage_limit' WHERE id='$user_id'";
         if ($conn->query($sql) === TRUE) {
-            echo "Directory and storage limit updated successfully.";
+            echo "<script>alert('Directory and storage limit updated successfully.');</script>";
         } else {
-            echo "Error updating database: " . $conn->error;
+            echo "<script>alert('Error updating database: " . $conn->error; "');</script>";
         }
     } else {
-        echo "User not found.";
+        echo "<script>alert('User not found.');</script>";
     }
 }
 
@@ -47,7 +51,6 @@ $users = $conn->query("SELECT * FROM users");
 
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

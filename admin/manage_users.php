@@ -13,32 +13,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = $_POST['username'];
         $password = md5($_POST['password']);
         $role = $_POST['role'];
+        $storage_limit = 1048576; // 1 GB in bytes
 
-        $sql = "INSERT INTO users (username, password, role) VALUES ('$username', '$password', '$role')";
+        // Tentukan root_directory berdasarkan role
+        $root_directory = ($role == 'admin') ? '../users/' : "../users/$username";
+
+        $sql = "INSERT INTO users (username, password, role, storage_limit, root_directory) VALUES ('$username', '$password', '$role', '$storage_limit', '$root_directory')";
         if ($conn->query($sql) === TRUE) {
             createUserDirectory($username);
-            echo "User added successfully.";
+            echo "<script>alert('User added successfully.');</script>";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "<script>alert('Error: " . $sql . "<br>" . $conn->error . "');</script>";
         }
     } elseif ($action == 'edit') {
         $user_id = $_POST['user_id'];
         $username = $_POST['username'];
         $role = $_POST['role'];
 
-        $sql = "UPDATE users SET username='$username', role='$role' WHERE id='$user_id'";
+        // Tentukan root_directory berdasarkan role
+        $root_directory = ($role == 'admin') ? '../users/' : "../users/$username";
+
+        $sql = "UPDATE users SET username='$username', role='$role', root_directory='$root_directory' WHERE id='$user_id'";
         if ($conn->query($sql) === TRUE) {
-            echo "User updated successfully.";
+            echo "<script>alert('User updated successfully.');</script>";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "<script>alert('Error: " . $sql . "<br>" . $conn->error . "');</script>";
         }
     } elseif ($action == 'delete') {
         $user_id = $_POST['user_id'];
         $sql = "DELETE FROM users WHERE id='$user_id'";
         if ($conn->query($sql) === TRUE) {
-            echo "User deleted successfully.";
+            echo "<script>alert('User deleted successfully.');</script>";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "<script>alert('Error: " . $sql . "<br>" . $conn->error . "');</script>";
         }
     }
 }
@@ -96,4 +103,3 @@ $conn->close();
     <a href="admin_dashboard.php">Back to Admin Dashboard</a>
 </body>
 </html>
-
