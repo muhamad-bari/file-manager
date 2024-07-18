@@ -54,6 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="password" name="confirm_password" required><br>
         <input type="submit" value="Update Password">
     </form>
-    <a href="index.php">Back to Admin Dashboard</a>
+    <a href="admin_dashboard.php">Back to Admin Dashboard</a>
 </body>
 </html>

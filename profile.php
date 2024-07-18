@@ -25,9 +25,9 @@ if ($result->num_rows > 0) {
             return 'Unlimited';
         }
 
-        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+        $units = array('KB', 'MB', 'GB', 'TB');
         $size = $storage_limit;
-        $unit = 'B';
+        $unit = 'KB'; // Starting from KB since database values are in KB
 
         for ($i = 0; $i < count($units) - 1; $i++) {
             if ($size >= 1024) {

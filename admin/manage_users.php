@@ -93,7 +93,7 @@ $conn->close();
             </li>
         <?php } ?>
     </ul>
-    <a href="index.php">Back to Admin Dashboard</a>
+    <a href="admin_dashboard.php">Back to Admin Dashboard</a>
 </body>
 </html>
 
