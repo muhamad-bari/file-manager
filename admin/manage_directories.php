@@ -20,15 +20,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($new_root_directory_type == 'universal') {
             $new_root_directory = '../users/';
-            $new_root_directory_db = 'universal_access';
+            $new_root_directory_db = '../users/';
         } else {
             if (!empty($_POST['root_directory'])) {
                 $new_root_directory = '../users/' . $_POST['root_directory'];
-                $new_root_directory_db = $_POST['root_directory'];
-
-                if (!rename($old_root_directory, $new_root_directory)) {
-                    echo "Error renaming directory.";
+                $new_root_directory_db = '../users/' . $_POST['root_directory'];
+                
+                // Cek apakah folder baru sudah ada
+                if (file_exists($new_root_directory)) {
+                    echo "<script>
+                            alert('Folder already exists.');
+                            window.location.href = 'manage_directories.php';
+                          </script>";
                     exit();
+                }
+
+                // Buat folder baru jika belum ada
+                if (!file_exists($new_root_directory)) {
+                    mkdir($new_root_directory, 0777, true);
+                }
+
+                // Hanya ganti nama direktori jika old_root_directory ada
+                if (file_exists($old_root_directory)) {
+                    if (!rename($old_root_directory, $new_root_directory)) {
+                        echo "Error renaming directory.";
+                        exit();
+                    }
+                } else {
+                    // Jika direktori lama tidak ada, buat yang baru saja
+                    mkdir($new_root_directory, 0777, true);
                 }
             } else {
                 $new_root_directory_db = $row['root_directory'];
