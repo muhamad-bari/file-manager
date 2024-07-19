@@ -16,18 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $old_root_directory = '../users/' . $row['root_directory'];
-
+        
         if ($new_root_directory_type == 'universal') {
             $new_root_directory = '../users/';
             $new_root_directory_db = 'universal'; // Just a string for DB entry, not a path
         } else {
             if (!empty($_POST['root_directory'])) {
                 $new_root_directory = '../users/' . $_POST['root_directory'];
-                $new_root_directory_db = $_POST['root_directory'];
-
+                $new_root_directory_db = '../users/' . $_POST['root_directory'];
+                
                 // Check if new directory already exists
-                if (file_exists($new_root_directory)) {
+                if (file_exists('../users/' . $new_root_directory)) {
                     echo "<script>
                             alert('Folder already exists.');
                             window.location.href = 'manage_directories.php';
@@ -35,36 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit();
                 }
 
-                // Ensure the old directory exists and is writable
-                if (!file_exists($old_root_directory)) {
-                    echo "<script>
-                            alert('Old directory does not exist.');
-                            window.location.href = 'manage_directories.php';
-                          </script>";
-                    exit();
-                }
-
-                if (!is_writable($old_root_directory)) {
-                    echo "<script>
-                            alert('Old directory is not writable.');
-                            window.location.href = 'manage_directories.php';
-                          </script>";
-                    exit();
-                }
-
                 // Create new directory if it doesn't exist
-                if (!file_exists($new_root_directory)) {
-                    mkdir($new_root_directory, 0777, true);
-                }
-
-                // Rename directory
-                if (!rename($old_root_directory, $new_root_directory)) {
-                    $error = error_get_last();
-                    echo "<script>
-                            alert('Error renaming directory: " . $error['message'] . "');
-                            window.location.href = 'manage_directories.php';
-                          </script>";
-                    exit();
+                if (!file_exists('../users/' . $new_root_directory_db)) {
+                    mkdir('../users/' . $new_root_directory_db, 0777, true);
                 }
             } else {
                 $new_root_directory_db = $row['root_directory'];
