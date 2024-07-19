@@ -11,6 +11,8 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
 // Initialize variables
 $directory = '';
 $username = '';
+$totalStorage = 0;
+$usedStorage = 0;
 
 // Check if directory parameter is set
 if (isset($_GET['directory'])) {
@@ -21,6 +23,31 @@ if (isset($_GET['directory'])) {
         // Fetch username from directory path
         $username = substr($directory, strlen('../users/'));
         $username = explode('/', $username)[0]; // Extract username part
+
+        // Fetch storage limit for the user
+        $sql = "SELECT storage_limit FROM users WHERE username='$username'";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $totalStorage = $row['storage_limit']; // in KB
+        }
+
+        // Function to calculate used storage
+        function calculateUsedStorage($directory) {
+            $usedStorage = 0;
+            if (is_dir($directory)) {
+                $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+                foreach ($files as $file) {
+                    if ($file->isFile()) {
+                        $usedStorage += $file->getSize();
+                    }
+                }
+            }
+            return $usedStorage / 1024; // Convert to KB
+        }
+
+        // Calculate used storage
+        $usedStorage = calculateUsedStorage($directory);
 
         // Function to display files in the user's directory
         function displayUserFiles($directory) {
@@ -34,6 +61,7 @@ if (isset($_GET['directory'])) {
                     while (($file = readdir($dh)) !== false) {
                         if ($file != "." && $file != "..") {
                             $file_path = $directory . '/' . $file;
+                            $file_size = is_dir($file_path) ? 0 : filesize($file_path);
                             echo "<tr>";
                             echo "<td>$counter</td>";
                             echo "<td>";
@@ -44,7 +72,7 @@ if (isset($_GET['directory'])) {
                             }
                             echo "</td>";
                             echo "<td>". (is_dir($file_path) ? "Folder" : pathinfo($file_path, PATHINFO_EXTENSION)) . "</td>";
-                            echo "<td>". (is_dir($file_path) ? "-" : filesize_formatted(filesize($file_path))) . "</td>";
+                            echo "<td>". (is_dir($file_path) ? "-" : filesize_formatted($file_size)) . "</td>";
                             echo "<td>". date("Y-m-d H:i:s", filemtime($file_path)) . "</td>";
                             echo "<td>";
                             echo "<form method='post' style='display: inline;'>";
@@ -81,8 +109,8 @@ if (isset($_GET['directory'])) {
             return round($size, 1) . ' ' . $units[$unit];
         }
 
-        // Display files in the user's directory
-        displayUserFiles($directory);
+        // Calculate remaining storage
+        $remainingStorage = $totalStorage - $usedStorage;
     } else {
         echo "<script>alert('Invalid directory.');</script>";
     }
@@ -113,7 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file']) && iss
     } else {
         echo "<script>alert('Entity $file_name does not exist.');</script>";
     }
-    
 }
 
 // Function to delete directory and all its contents recursively
@@ -142,6 +169,9 @@ function deleteDirectory($directory) {
     <h1>User Directory Details</h1>
     <p>Username: <?php echo $username; ?></p>
     <p>Directory: <?php echo $directory; ?></p>
+    <p>Total Storage: <?php echo filesize_formatted($totalStorage * 1024); ?></p>
+    <p>Used Storage: <?php echo filesize_formatted($usedStorage * 1024); ?></p>
+    <p>Remaining Storage: <?php echo filesize_formatted(($totalStorage - $usedStorage) * 1024); ?></p>
 
     <!-- Display files in the user's directory -->
     <?php displayUserFiles($directory); ?>

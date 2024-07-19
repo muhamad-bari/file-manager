@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     mkdir($new_root_directory, 0777, true);
                 }
 
-                // Hanya ganti nama direktori jika old_root_directory ada
-                if (file_exists($old_root_directory)) {
+                // Hanya ganti nama direktori jika old_root_directory ada dan berbeda dari new_root_directory
+                if (file_exists($old_root_directory) && $old_root_directory != $new_root_directory) {
                     if (!rename($old_root_directory, $new_root_directory)) {
-                        echo "Error renaming directory.";
+                        echo "<script>alert('Error renaming directory.');</script>";
                         exit();
                     }
                 } else {
