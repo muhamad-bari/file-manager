@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($new_root_directory_type == 'universal') {
             $new_root_directory = '../users/';
-            $new_root_directory_db = '../users/';
+            $new_root_directory_db = 'universal'; // Just a string for DB entry, not a path
         } else {
             if (!empty($_POST['root_directory'])) {
                 $new_root_directory = '../users/' . $_POST['root_directory'];
-                $new_root_directory_db = '../users/' . $_POST['root_directory'];
-                
-                // Cek apakah folder baru sudah ada
+                $new_root_directory_db = $_POST['root_directory'];
+
+                // Check if new directory already exists
                 if (file_exists($new_root_directory)) {
                     echo "<script>
                             alert('Folder already exists.');
@@ -35,20 +35,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit();
                 }
 
-                // Buat folder baru jika belum ada
+                // Ensure the old directory exists and is writable
+                if (!file_exists($old_root_directory)) {
+                    echo "<script>
+                            alert('Old directory does not exist.');
+                            window.location.href = 'manage_directories.php';
+                          </script>";
+                    exit();
+                }
+
+                if (!is_writable($old_root_directory)) {
+                    echo "<script>
+                            alert('Old directory is not writable.');
+                            window.location.href = 'manage_directories.php';
+                          </script>";
+                    exit();
+                }
+
+                // Create new directory if it doesn't exist
                 if (!file_exists($new_root_directory)) {
                     mkdir($new_root_directory, 0777, true);
                 }
 
-                // Hanya ganti nama direktori jika old_root_directory ada dan berbeda dari new_root_directory
-                if (file_exists($old_root_directory) && $old_root_directory != $new_root_directory) {
-                    if (!rename($old_root_directory, $new_root_directory)) {
-                        echo "<script>alert('Error renaming directory.');</script>";
-                        exit();
-                    }
-                } else {
-                    // Jika direktori lama tidak ada, buat yang baru saja
-                    mkdir($new_root_directory, 0777, true);
+                // Rename directory
+                if (!rename($old_root_directory, $new_root_directory)) {
+                    $error = error_get_last();
+                    echo "<script>
+                            alert('Error renaming directory: " . $error['message'] . "');
+                            window.location.href = 'manage_directories.php';
+                          </script>";
+                    exit();
                 }
             } else {
                 $new_root_directory_db = $row['root_directory'];
@@ -58,12 +74,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Update database
         $sql = "UPDATE users SET root_directory='$new_root_directory_db', storage_limit='$storage_limit' WHERE id='$user_id'";
         if ($conn->query($sql) === TRUE) {
-            echo "<script>alert('Directory and storage limit updated successfully.');</script>";
+            echo "<script>
+                    alert('Directory and storage limit updated successfully.');
+                    window.location.href = 'manage_directories.php';
+                  </script>";
         } else {
-            echo "<script>alert('Error updating database: " . $conn->error; "');</script>";
+            echo "<script>
+                    alert('Error updating database: " . $conn->error . "');
+                    window.location.href = 'manage_directories.php';
+                  </script>";
         }
     } else {
-        echo "<script>alert('User not found.');</script>";
+        echo "<script>
+                alert('User not found.');
+                window.location.href = 'manage_directories.php';
+              </script>";
     }
 }
 
