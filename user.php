@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
+    header('Location: index.php');
     exit();
 }
 
@@ -27,7 +27,7 @@ if ($result->num_rows > 0) {
     $storage_limit_kb = $row['storage_limit']; // in kilobytes
     $root_directory = str_replace('../users', 'users', $row['root_directory']); // replace ../users with users
 } else {
-    echo "<script>alert('User not found.'); window.location.href='login.php';</script>";
+    echo "<script>alert('User not found.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -61,7 +61,7 @@ function isFolderWithinRoot($folder, $root_directory) {
 $current_folder = isset($_GET['folder']) ? $_GET['folder'] : $root_directory;
 // Ensure the current folder is within the root directory
 if (!isFolderWithinRoot($current_folder, $root_directory)) {
-    echo "<script>alert('Unauthorized access.'); window.location.href='index.php';</script>";
+    echo "<script>alert('Unauthorized access.'); window.location.href='../index.php';</script>";
     exit();
 }
 $current_display_folder = str_replace('users/', '', $current_folder); // Untuk display saja, tanpa 'users/'

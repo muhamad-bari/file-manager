@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="card-body">
       <p class="login-box-msg">Sign in to start your session</p>
 
-      <form action="login.php" method="post">
+      <form action="index.php" method="post">
         <div class="input-group mb-3">
           <input type="text" name="username" class="form-control" placeholder="Username" required>
           <div class="input-group-append">
