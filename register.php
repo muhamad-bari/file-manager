@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($conn->query($sql) === TRUE) {
             createUserDirectory($root_directory);
-            echo "<script>alert('User baru berhasil didaftarkan.'); window.location.href='login.php';</script>";
+            echo "<script>alert('User baru berhasil didaftarkan.'); window.location.href='index.php';</script>";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
@@ -42,17 +42,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="lte/layout/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="assets/plugins/fontawesome-free/css/all.min.css">
   <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="lte/layout/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <link rel="stylesheet" href="assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="lte/layout/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="assets/dist/css/adminlte.min.css">
 </head>
 <body class="hold-transition register-page">
 <div class="register-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="login.php" class="h1"><b>File</b> Manager</a>
+      <a href="index.php" class="h1"><b>File</b> Manager</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Register a new free membership</p>
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <!-- /.col -->
         </div>
       </form>
-      <a href="login.php" class="text-center">I already have a membership</a>
+      <a href="index.php" class="text-center">I already have a membership</a>
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->
@@ -99,10 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!-- /.register-box -->
 
 <!-- jQuery -->
-<script src="lte/layout/plugins/jquery/jquery.min.js"></script>
+<script src="assets/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="lte/layout/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
-<script src="lte/layout/dist/js/adminlte.min.js"></script>
+<script src="assets/dist/js/adminlte.min.js"></script>
 </body>
 </html>
