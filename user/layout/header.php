@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -17,6 +13,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="../assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="../assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../assets/dist/css/adminlte.min.css">
 </head>
@@ -44,20 +42,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <li class="nav-item">
             <a href="#" class="nav-link">Contact</a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">Profile</a>
-          </li>
         </ul>
-
-      <!-- Right navbar links -->
-      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+      </div>
+    <!-- Right navbar links -->
+    <ul class="order-md-3 navbar-nav navbar-no-expand ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="#" class="btn btn-default" data-toggle="modal" data-target="#modal-create">
           <i class="fas fa-folder-plus"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="#" class="btn btn-default" data-toggle="modal" data-target="#modal-upload">
           <i class="fas fa-upload"></i>
           </a>
         </li>
@@ -66,7 +61,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <i class="fas fa-user-circle"></i>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="logout.php">
+          <i class="fas fa-sign-out-alt"></i>
+          </a>
+        </li>
       </ul>
-    </div>
-  </nav>
+  </nav>      
   <!-- /.navbar -->

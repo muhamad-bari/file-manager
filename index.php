@@ -10,15 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = $user['role'];
-        header('Location: user/index-user.php');
-    } else {
-        echo "Invalid username or password.";
-    }
-
-    $conn->close();
+      // Login berhasil
+      $_SESSION['username'] = $username;
+      $_SESSION['login_success'] = true;
+      header("Location: user/index-user.php");
+  } else {
+      // Login gagal
+      $_SESSION['login_success'] = false;
+      header("Location: index.php");
+  }
+  $conn->close();
+  exit();
 }
 ?>
 
@@ -35,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <link rel="stylesheet" href="assets/plugins/fontawesome-free/css/all.min.css">
   <!-- icheck bootstrap -->
   <link rel="stylesheet" href="assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="assets/dist/css/adminlte.min.css">
 </head>
@@ -50,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       <form action="index.php" method="post">
         <div class="input-group mb-3">
-          <input type="text" name="username" class="form-control" placeholder="Username" required>
+          <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -58,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
+          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -96,7 +100,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <script src="assets/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- AdminLTE App -->
 <script src="assets/dist/js/adminlte.min.js"></script>
+<?php if (isset($_SESSION['login_success'])): ?>
+        <script>
+            $(document).ready(function() {
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                var loginSuccess = <?php echo $_SESSION['login_success'] ? 'true' : 'false'; ?>;
+                <?php unset($_SESSION['login_success']); ?>
+
+                if (loginSuccess) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Login Berhasil'
+                    });
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Login Gagal',
+                        text: 'Username atau password salah'
+                    });
+                }
+            });
+        </script>
+<?php endif; ?>
+
 </body>
 </html>
