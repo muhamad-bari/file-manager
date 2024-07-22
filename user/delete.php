@@ -3,7 +3,7 @@ session_start();
 include '../db.php';
 
 if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
+    header('Location: ../index.php');
     exit();
 }
 
@@ -33,4 +33,4 @@ if (strpos($path, $root_directory) === 0 && file_exists($path)) {
 }
 ?>
 
-<a href="index.php">Back to File Manager</a>
+<a href="index-user.php">Back to File Manager</a>

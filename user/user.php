@@ -7,6 +7,13 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+// Aktifkan tampilan error
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// Output debugging
+// echo "Debug: Start of user.php<br>";
+
 $username = $_SESSION['username'];
 
 // Fetch user role from database
@@ -27,7 +34,7 @@ if ($result->num_rows > 0) {
     $storage_limit_kb = $row['storage_limit']; // in kilobytes
     $root_directory = str_replace('../users', 'users', $row['root_directory']); // replace ../users with users
 } else {
-    echo "<script>alert('User not found.'); window.location.href='index.php';</script>";
+    echo "<script>alert('User not found.'); window.location.href='../index.php';</script>";
     exit();
 }
 
@@ -61,7 +68,7 @@ function isFolderWithinRoot($folder, $root_directory) {
 $current_folder = isset($_GET['folder']) ? $_GET['folder'] : $root_directory;
 // Ensure the current folder is within the root directory
 if (!isFolderWithinRoot($current_folder, $root_directory)) {
-    echo "<script>alert('Unauthorized access.'); window.location.href='../index.php';</script>";
+    echo "<script>alert('Unauthorized access.'); window.location.href='index-user.php';</script>";
     exit();
 }
 $current_display_folder = str_replace('users/', '', $current_folder); // Untuk display saja, tanpa 'users/'
@@ -189,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file']) && iss
         } else {
             if (unlink($file_path)) {
                 echo "<script>alert('File \"$file_name\" has been deleted.');</script>";
-            } else {
+            } else {    
                 echo "<script>alert('Error deleting file \"$file_name\".');</script>";
             }
         }
@@ -200,21 +207,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file']) && iss
 
 // Handle folder creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_folder']) && isset($_POST['folder_name'])) {
+    echo "Debug: POST request received.<br>";
     $folder_name = $_POST['folder_name'];
     $curfol = $_POST["curfol"];
     $new_folder_path = $curfol . '/' . $folder_name;
 
+    // Output debugging
+    echo "Debug: Folder name: $folder_name, Current folder: $curfol, New folder path: $new_folder_path<br>";
+
     // Check if folder already exists
     if (file_exists($new_folder_path)) {
-        echo "<script>alert('Folder already exists.'); window.location.href='?folder=$curfol';</script>";
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Folder already exists.'
+            }).then(() => {
+                window.location.href='index-user.php?folder=$curfol';
+            });
+        </script>";
     } else {
         // Create the new folder
         if (mkdir($new_folder_path, 0777, true)) {
-            echo "<script>alert('Folder \"$folder_name\" created successfully.'); window.location.href='?folder=$curfol';</script>";
+            echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Folder \"$folder_name\" created successfully.'
+                }).then(() => {
+                    window.location.href='index-user.php?folder=$curfol';
+                });
+            </script>";
         } else {
-            echo "<script>alert('Error creating folder \"$folder_name\".'); window.location.href='?folder=$curfol';</script>";
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error creating folder \"$folder_name\".'
+                }).then(() => {
+                    window.location.href='index-user.php?folder=$curfol';;
+                });
+            </script>";
         }
     }
 }
+// Output debugging
+// echo "Debug: End of user.php<br>";
+
+// Tambahkan refresh halaman setelah proses selesai
+if (isset($_POST['create_folder']) || isset($_POST['upload_file'])) {
+    echo "<script>window.location.reload();</script>";
+}
+
 $conn->close();
 ?>

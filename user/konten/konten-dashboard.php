@@ -45,7 +45,7 @@ function displayUserFiles($root_directory) {
                     echo "<td>";
                     if (is_dir($file_path)) {
                         // If it's a directory, add '/' and make it clickable
-                        echo "<a href='index.php?folder=$file_path'>$file/</a>";
+                        echo "<a href='index-user.php?folder=$file_path'>$file/</a>";
                     } else {
                         echo "$file";
                     }
@@ -81,7 +81,6 @@ function displayUserFiles($root_directory) {
     }
 }
 ?>
- 
  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -104,7 +103,7 @@ function displayUserFiles($root_directory) {
     <div class="content">
       <div class="container">
         <!-- modal rename folder-->
-        <form action="konten-dashboard.php" method="post">
+        <form action="user.php" method="post">
             <div class="modal fade" id="modal-rename">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -118,12 +117,12 @@ function displayUserFiles($root_directory) {
                     <div class="form-group">
                           <label for="folder_name">Input Folder Name</label>
                           <input type="text" class="form-control" id="folder_name" name="new_file_name" placeholder="New Name">
-                          <input type="hidden" name="old_file_name" value="$file">
+                          <input type="hidden" name="old_file_name" id="old_file_name">
                     </div>
                   </div>
                   <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name="rename_file">Create</button>
+                    <button type="submit" class="btn btn-primary" name="rename_file">Rename</button>
                   </div>
                 </div>
               </div>
