@@ -54,7 +54,7 @@ function displayUserFiles($root_directory) {
                     echo "<td>". (is_dir($file_path) ? "-" : filesize_formatted(filesize($file_path))) . "</td>";
                     echo "<td>". date("Y-m-d H:i:s", filemtime($file_path)) . "</td>";
                     echo "<td>";
-                    echo "<form method='post' style='display: inline;'>";
+                    echo "<form method='post' action='user.php' style='display: inline;'>";
                     echo "<input type='hidden' name='file_name' value='$file'>";
                     echo "<button type='submit' name='delete_file' style='background: none; border: none; cursor: pointer;'><i class='fas fa-trash-alt'></i></button>";
                     echo "</form>";
@@ -108,14 +108,14 @@ function displayUserFiles($root_directory) {
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h4 class="modal-title">Rename Folder</h4>
+                    <h4 class="modal-title">Rename Item</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
                     <div class="form-group">
-                          <label for="folder_name">Input Folder Name</label>
+                          <label for="folder_name">Input New Name</label>
                           <input type="text" class="form-control" id="folder_name" name="new_file_name" placeholder="New Name">
                           <input type="hidden" name="old_file_name" id="old_file_name">
                     </div>

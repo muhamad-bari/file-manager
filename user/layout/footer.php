@@ -51,5 +51,6 @@ $(document).on('click', 'button[data-toggle="modal"][data-target="#modal-rename"
         $('#modal-rename #old_file_name').val(fileName);
 });
 </script>
+</script>
 </body>
 </html>

@@ -11,8 +11,6 @@ if (!isset($_SESSION['username'])) {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-// Output debugging
-// echo "Debug: Start of user.php<br>";
 
 $username = $_SESSION['username'];
 
@@ -89,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file_size = $file['size']; // in bytes
 
     if ($storage_limit_kb != -1 && ($total_storage_used + $file_size) > ($storage_limit_kb * 1024)) {
-        echo "<script>alert('Storage limit exceeded. Cannot upload file.');</script>";
+        echo "<script>alert('Storage limit exceeded. Cannot upload file.'); window.location.href='index-user.php?folder=$current_folder';</script>";
         exit();
     }
 
@@ -100,20 +98,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     // Check if file already exists
     if (file_exists($target_file)) {
-        echo "<script>alert('File already exists.');</script>";
+        echo "<script>alert('File already exists.'); window.location.href='index-user.php?folder=$current_folder';</script>";
         $uploadOk = 0;
     }
-
-    // Allow all file formats (remove format checking)
     
     // Check if $uploadOk is set to 0 by an error
     if ($uploadOk == 0) {
-        echo "<script>alert('Sorry, your file was not uploaded.');</script>";
+        echo "<script>alert('Sorry, your file was not uploaded.'); window.location.href='index-user.php?folder=$current_folder';</script>";
     } else {
         if (move_uploaded_file($file['tmp_name'], $target_file)) {
-            echo "<script>alert('The file ". basename($file['name']). " has been uploaded.');</script>";
+            echo "<script>alert('The file ". basename($file['name']). " has been uploaded.'); window.location.href='index-user.php?folder=$current_folder';</script>";
         } else {
-            echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
+            echo "<script>alert('Sorry, there was an error uploading your file.'); window.location.href='index-user.php?folder=$current_folder';</script>";
         }
     }
 }
@@ -128,12 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rename_file']) && iss
     // Check if file exists and rename it
     if (file_exists($old_file_path)) {
         if (rename($old_file_path, $new_file_path)) {
-            echo "<script>alert('File \"$old_file_name\" has been renamed to \"$new_file_name\".');</script>";
+            echo "<script>alert('File \"$old_file_name\" has been renamed to \"$new_file_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
         } else {
-            echo "<script>alert('Error renaming file \"$old_file_name\".');</script>";
+            echo "<script>alert('Error renaming file \"$old_file_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
         }
     } else {
-        echo "<script>alert('File \"$old_file_name\" does not exist.');</script>";
+        echo "<script>alert('File \"$old_file_name\" does not exist.'); window.location.href='index-user.php?folder=$current_folder';</script>";
     }
 }
 
@@ -189,75 +185,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file']) && iss
     if (file_exists($file_path)) {
         if (is_dir($file_path)) {
             if (deleteDirectory($file_path)) {
-                echo "<script>alert('Directory \"$file_name\" has been deleted.');</script>";
+                echo "<script>alert('Directory \"$file_name\" has been deleted.'); window.location.href='index-user.php?folder=$current_folder';</script>";
             } else {
-                echo "<script>alert('Error deleting directory \"$file_name\".');</script>";
+                echo "<script>alert('Error deleting directory \"$file_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
             }
         } else {
             if (unlink($file_path)) {
-                echo "<script>alert('File \"$file_name\" has been deleted.');</script>";
-            } else {    
-                echo "<script>alert('Error deleting file \"$file_name\".');</script>";
+                echo "<script>alert('File \"$file_name\" has been deleted.'); window.location.href='index-user.php?folder=$current_folder';</script>";
+            } else {
+                echo "<script>alert('Error deleting file \"$file_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
             }
         }
     } else {
-        echo "<script>alert('Entity \"$file_name\" does not exist.');</script>";
+        echo "<script>alert('Entity \"$file_name\" does not exist.'); window.location.href='index-user.php?folder=$current_folder';</script>";
     }
 }
 
 // Handle folder creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_folder']) && isset($_POST['folder_name'])) {
-    echo "Debug: POST request received.<br>";
     $folder_name = $_POST['folder_name'];
     $curfol = $_POST["curfol"];
     $new_folder_path = $curfol . '/' . $folder_name;
 
-    // Output debugging
-    echo "Debug: Folder name: $folder_name, Current folder: $curfol, New folder path: $new_folder_path<br>";
 
     // Check if folder already exists
     if (file_exists($new_folder_path)) {
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Folder already exists.'
-            }).then(() => {
-                window.location.href='index-user.php?folder=$curfol';
-            });
-        </script>";
+        echo "<script>alert('Folder already exists.'); window.location.href='index-user.php?folder=$current_folder';</script>";
     } else {
         // Create the new folder
         if (mkdir($new_folder_path, 0777, true)) {
-            echo "<script>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Folder \"$folder_name\" created successfully.'
-                }).then(() => {
-                    window.location.href='index-user.php?folder=$curfol';
-                });
-            </script>";
+            echo "<script>alert('Folder \"$folder_name\" created successfully.'); window.location.href='index-user.php?folder=$current_folder';</script>";
         } else {
-            echo "<script>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error creating folder \"$folder_name\".'
-                }).then(() => {
-                    window.location.href='index-user.php?folder=$curfol';;
-                });
-            </script>";
+            echo "<script>alert('Error creating folder \"$folder_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
         }
     }
-}
-// Output debugging
-// echo "Debug: End of user.php<br>";
-
-// Tambahkan refresh halaman setelah proses selesai
-if (isset($_POST['create_folder']) || isset($_POST['upload_file'])) {
-    echo "<script>window.location.reload();</script>";
 }
 
 $conn->close();
 ?>
+
