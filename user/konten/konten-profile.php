@@ -115,7 +115,7 @@ $conn->close();
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="index-user.php">Home</a></li>
               <li class="breadcrumb-item active">User Profile</li>
             </ol>
           </div>
@@ -134,7 +134,7 @@ $conn->close();
               <div class="card-body box-profile">
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle"
-                       src="../assets/dist/img/user4-128x128.jpg"
+                       src="../assets/dist/img/avatar5.png"
                        alt="User profile picture">
                 </div>
 
