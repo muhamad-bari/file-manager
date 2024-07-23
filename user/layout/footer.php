@@ -35,20 +35,26 @@
 <!-- Page specific script -->
 <script>
 $(function () {
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+    $("#example1").DataTable({
+        "responsive": true, 
+        "lengthChange": false, 
+        "autoWidth": false,
+        "buttons": [
+            {
+                text: 'My Custom Button',
+                action: function (e, dt, node, config) {
+                    myCustomFunction();
+                }
+            }
+        ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 });
 
-$(document).on('click', 'button[data-toggle="modal"][data-target="#modal-rename"]', function() {
-        var fileName = $(this).data('file');
-        $('#modal-rename #old_file_name').val(fileName);
+$(document).on('click', '[data-toggle="modal"]', function() {
+    var file = $(this).data('file');
+    var folder = $(this).data('folder');
+    $('#old_file_name').val(file);
+    $('#rename_folder').val(folder);
 });
 </script>
 </script>
