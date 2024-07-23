@@ -35,20 +35,45 @@
 <!-- Page specific script -->
 <script>
 $(function () {
+    function updatePreviousFolderButton() {
+        var currentFolder = new URLSearchParams(window.location.search).get('folder');
+        var rootDirectory = 'users/' + '<?php echo $_SESSION['username']; ?>';
+
+        // If current folder is not the root directory, show the button
+        if (currentFolder && currentFolder !== rootDirectory) {
+            $('#previous-folder-btn').show();
+        } else {
+            $('#previous-folder-btn').hide();
+        }
+    }
+
+    function myCustomFunction() {
+        var currentFolder = new URLSearchParams(window.location.search).get('folder');
+        var parentFolder = currentFolder.substring(0, currentFolder.lastIndexOf('/'));
+        window.location.href = 'index-user.php?folder=' + encodeURIComponent(parentFolder);
+    }
+
     $("#example1").DataTable({
         "responsive": true, 
         "lengthChange": false, 
         "autoWidth": false,
         "buttons": [
             {
-                text: 'My Custom Button',
+                text: 'Previous Folder',
+                attr: {
+                    id: 'previous-folder-btn'
+                },
                 action: function (e, dt, node, config) {
                     myCustomFunction();
                 }
             }
         ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    // Call the function to update the button visibility on page load
+    updatePreviousFolderButton();
 });
+
 
 $(document).on('click', '[data-toggle="modal"]', function() {
     var file = $(this).data('file');
