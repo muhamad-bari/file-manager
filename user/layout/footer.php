@@ -30,6 +30,8 @@
 <script src="../assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- SweetAlert2 -->
 <script src="../assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- ChartJS -->
+<script src="../assets/plugins/chart.js/Chart.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../assets/dist/js/adminlte.min.js"></script>
 <!-- Page specific script -->
@@ -74,13 +76,38 @@ $(function () {
     updatePreviousFolderButton();
 });
 
-
 $(document).on('click', '[data-toggle="modal"]', function() {
     var file = $(this).data('file');
     var folder = $(this).data('folder');
     $('#old_file_name').val(file);
     $('#rename_folder').val(folder);
 });
+
+var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: [
+          'Used Storage',
+          'Total Storage',
+          'Remaining Storage',
+      ],
+      datasets: [
+        {
+          data: [usedStorage, totalStorage, remainingStorage],
+          backgroundColor : ['#f56954', '#00a65a', '#d2d6de'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
 </script>
 </script>
 </body>

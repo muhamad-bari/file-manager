@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
 }
 
-/// Handle file rename
+// Handle file rename
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rename_file']) && isset($_POST['old_file_name']) && isset($_POST['new_file_name']) && isset($_POST['folder'])) {
     $old_file_name = $_POST['old_file_name'];
     $new_file_name = $_POST['new_file_name'];
@@ -171,27 +171,28 @@ function deleteDirectory($directory) {
 }
 
 // Handle file or directory deletion
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file']) && isset($_POST['file_name'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file']) && isset($_POST['file_name']) && isset($_POST['folder'])) {
     $file_name = $_POST['file_name'];
-    $file_path = $current_folder . '/' . $file_name;
+    $folder = $_POST['folder'];
+    $file_path = $folder . '/' . $file_name;
 
     // Check if entity exists and delete it
     if (file_exists($file_path)) {
         if (is_dir($file_path)) {
             if (deleteDirectory($file_path)) {
-                echo "<script>alert('Directory \"$file_name\" has been deleted.'); window.location.href='index-user.php?folder=$current_folder';</script>";
+                echo "<script>alert('Directory \"$file_name\" has been deleted.'); window.location.href='index-user.php?folder=$folder';</script>";
             } else {
-                echo "<script>alert('Error deleting directory \"$file_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
+                echo "<script>alert('Error deleting directory \"$file_name\".'); window.location.href='index-user.php?folder=$folder';</script>";
             }
         } else {
             if (unlink($file_path)) {
-                echo "<script>alert('File \"$file_name\" has been deleted.'); window.location.href='index-user.php?folder=$current_folder';</script>";
+                echo "<script>alert('File \"$file_name\" has been deleted.'); window.location.href='index-user.php?folder=$folder';</script>";
             } else {
-                echo "<script>alert('Error deleting file \"$file_name\".'); window.location.href='index-user.php?folder=$current_folder';</script>";
+                echo "<script>alert('Error deleting file \"$file_name\".'); window.location.href='index-user.php?folder=$folder';</script>";
             }
         }
     } else {
-        echo "<script>alert('Entity \"$file_name\" does not exist.'); window.location.href='index-user.php?folder=$current_folder';</script>";
+        echo "<script>alert('Entity \"$file_name\" does not exist.'); window.location.href='index-user.php?folder=$folder';</script>";
     }
 }
 

@@ -57,7 +57,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="profile.php">
           <i class="fas fa-user-circle"></i>
           </a>
         </li>
