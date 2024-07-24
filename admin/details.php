@@ -4,7 +4,7 @@ include '../db.php';
 
 // Check if user is logged in as admin or redirect
 if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../index.php');
     exit();
 }
 

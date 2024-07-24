@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
 
     // Redirect admin to admin/index.php
     if ($role == 'admin') {
-        header('Location: admin/admin_dashboard.php');
+        header('Location: ../admin/admin_dashboard.php');
         exit();
     }
 

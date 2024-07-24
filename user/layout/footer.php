@@ -107,6 +107,25 @@ var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
       data: donutData,
       options: donutOptions
     })
+
+    $(document).ready(function() {
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                var loginSuccess = <?php echo $username; ?>;
+                <?php unset($username); ?>
+
+                if (loginSuccess) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Login Berhasil'
+                    });
+                } exit();
+            });
 </script>
 </script>
 </body>

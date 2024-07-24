@@ -1,28 +1,14 @@
 <?php include 'user.php'; ?>
 
-<?php if (isset($_SESSION['login_success'])): ?>
-    <script>
-        $(document).ready(function() {
-            var Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-
-            var loginSuccess = <?php echo $_SESSION['login_success'] ? 'true' : 'false'; ?>;
-            <?php unset($_SESSION['login_success']); ?>
-
-            if (loginSuccess) {
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Login Berhasil'
-                });
-            }
-        });
-    </script>
-<?php endif; ?>
 <?php
+if (!isset($_SESSION['username']))
+{
+  header('Location: ../index.php');
+  exit();
+}
+
+$username = $_SESSION['username'];
+
 // Function to display list of files in user's directory
 function displayUserFiles($root_directory, $current_folder) {
   $directory = $current_folder . '/';
