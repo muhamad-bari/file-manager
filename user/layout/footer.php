@@ -87,13 +87,12 @@ var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
     var donutData        = {
       labels: [
           'Used Storage',
-          'Total Storage',
           'Remaining Storage',
       ],
       datasets: [
         {
-          data: [usedStorage, totalStorage, remainingStorage],
-          backgroundColor : ['#f56954', '#00a65a', '#d2d6de'],
+          data: [usedStorage, remainingStorage],
+          backgroundColor : ['#f56954', '#d2d6de'],
         }
       ]
     }

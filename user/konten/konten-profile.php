@@ -144,13 +144,10 @@ $conn->close();
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Storage Limit</b> <a class="float-right"><?php echo htmlspecialchars($storage_limit_display); ?></a>
-                  </li>
-                  <li class="list-group-item">
                     <b>Used Storage</b> <a class="float-right"><?php echo htmlspecialchars($total_used_storage_display); ?></a>
                   </li>
                   <li class="list-group-item">
-                    <b>Remaining Storage</b> <a class="float-right"><?php echo htmlspecialchars($remaining_storage_display); ?></a>
+                    <b>Remaining Storage</b> <a class="float-right"><?php echo htmlspecialchars($remaining_storage_display); ?> </a>
                   </li>
                 </ul>
 
@@ -177,7 +174,7 @@ $conn->close();
                     <!-- DONUT CHART -->
                     <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Donut Chart</h3>
+                                <h3 class="card-title">Total Storage: <?php echo htmlspecialchars($storage_limit_display); ?></h3>
                             </div>
                         <div class="card-body">
                             <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
