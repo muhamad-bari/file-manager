@@ -1,21 +1,30 @@
 <?php
 include 'db.php';
 session_start();
+// Debugging: Cetak nilai sesi untuk pemeriksaan
+// echo 'Username: ' . (isset($_SESSION['username']) ? $_SESSION['username'] : 'Tidak ada sesi username') . '<br>';
+// echo 'Role: ' . (isset($_SESSION['role']) ? $_SESSION['role'] : 'Tidak ada sesi role') . '<br>';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = md5($_POST['password']);
+  $username = $_POST['username'];
+  $password = md5($_POST['password']);
+  $remember = isset($_POST['remember']);
 
-    $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-    $result = $conn->query($sql);
+  $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+  $result = $conn->query($sql);
 
-    if ($result->num_rows > 0) {
-      // Login berhasil
+  if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
       $_SESSION['username'] = $username;
+      $_SESSION['role'] = $row['role'];
       $_SESSION['login_success'] = true;
-      header("Location: user/index-user.php");
+
+      if ($remember && $row['role'] == 'admin') {
+          header("Location: admin/admin_dashboard.php");
+      } else {
+          header("Location: user/index-user.php");
+      }
   } else {
-      // Login gagal
       $_SESSION['login_success'] = false;
       header("Location: index.php");
   }
@@ -44,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
-  <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
       <a href="" class="h1"><b>Login</b> File Manager</a>
@@ -72,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row">
           <div class="col-8">
             <div class="icheck-primary">
-              <input type="checkbox" id="remember">
+              <input type="checkbox" id="remember" name="remember">
               <label for="remember">
                 Remember Me
               </label>

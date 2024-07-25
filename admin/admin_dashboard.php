@@ -57,6 +57,6 @@ echo "</ul>";
     <a href="manage_users.php">Manage Users</a><br>
     <a href="edit_profile.php">Edit Profile</a><br>
     <a href="../profile.php">Profile</a><br>
-    <a href="../logout.php">Logout</a>
+    <a href="../user/logout.php">Logout</a>
 </body>
 </html>

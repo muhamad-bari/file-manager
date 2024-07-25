@@ -7,12 +7,13 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+$username = $_SESSION['username'];
+$role = $_SESSION['role'];
+
 // Aktifkan tampilan error
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-$username = $_SESSION['username'];
 
 // Fetch user role from database
 $sql = "SELECT role, storage_limit, root_directory FROM users WHERE username='$username'";
@@ -20,17 +21,14 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    $role = $row['role'];
-
+    // For non-admin users, fetch storage limit and root directory
+    $storage_limit_kb = $row['storage_limit']; // in kilobytes
+    $root_directory = str_replace('../users', 'users', $row['root_directory']); // replace ../users with users
     // Redirect admin to admin/index.php
     if ($role == 'admin') {
         header('Location: ../admin/admin_dashboard.php');
         exit();
     }
-
-    // For non-admin users, fetch storage limit and root directory
-    $storage_limit_kb = $row['storage_limit']; // in kilobytes
-    $root_directory = str_replace('../users', 'users', $row['root_directory']); // replace ../users with users
 } else {
     echo "<script>alert('User not found.'); window.location.href='../index.php';</script>";
     exit();
